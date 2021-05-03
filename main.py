@@ -123,11 +123,28 @@ print(X_train_sample, y_train_sample)
 
 model = UNet()
 
-def pixel_accuracy():
-    pass
+def pixel_accuracy(output,label):
+    T_predict=0
+    Total_predict=label.shape[0]*label.shape[1]
+    for i,c in enumerate(label):
+        curr_output=output[i]
+        curr_label=label[i]
+        T_predict+=np.sum(curr_output==curr_label)
+    if T_predict==0:
+        pixel_accur=0
+    else:
+        pixel_accur=T_predict/Total_predict
+    return pixel_accur
 
-def mIoU(pred, mask):
-    pass
+def MiOU(output,label,n_class):
+    to_return_MiOU=np.zeros(n_class)
+    for i in range(0,n_class):
+        pred=np.arange(output.shape[0])[output==i]
+        target=np.arange(label.shape[0])[label==i]
+        n_intersection=np.intersect1d(pred,target).shape[0]
+        n_union=np.union1d(pred,target).shape[0]
+        to_return_MiOU[i]=n_intersection/(n_union+1)
+    return np.mean(to_return_MiOU)
 
 def fit():
     pass
